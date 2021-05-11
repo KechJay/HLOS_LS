@@ -1,0 +1,158 @@
+rm(list=ls())
+#========================================Import data for imputation
+setwd("C:/Users/~/LOS")
+LOS3A <- read.csv("LOS3A.csv")
+str(LOS3A)
+LOS3A$hospital <-as.factor(LOS3A$hospital)
+LOS3A$gender <-as.factor(LOS3A$gender)
+LOS3A$race <-as.factor(LOS3A$race)
+LOS3A$language_group <- as.factor(LOS3A$language_group)
+LOS3A$employment <- as.factor(LOS3A$employment)
+LOS3A$education <- as.factor(LOS3A$education)
+LOS3A$place_of_birth <-as.factor(LOS3A$place_of_birth)
+LOS3A$sa_province <-as.factor(LOS3A$sa_province)
+LOS3A$relaionship_to_pt___5  <-as.factor(LOS3A$relaionship_to_pt___5)
+LOS3A$relaionship_to_pt___6 <-as.factor(LOS3A$relaionship_to_pt___6)
+LOS3A$fam_hist_ca <-as.factor(LOS3A$fam_hist_ca)
+LOS3A$relaionship_to_pt___16 <-as.factor(LOS3A$relaionship_to_pt___16) 
+LOS3A$referral <-as.factor(LOS3A$referral)
+LOS3A$smoking  <-as.factor(LOS3A$smoking ) 
+LOS3A$alcohol_consump <-as.factor(LOS3A$alcohol_consump) 
+LOS3A$malig_location___3 <-as.factor(LOS3A$malig_location___3) 
+LOS3A$dm <-as.factor(LOS3A$dm) 
+LOS3A$non_ca_rx___5 <-as.factor(LOS3A$non_ca_rx___5) 
+LOS3A$non_ca_rx___1 <-as.factor(LOS3A$non_ca_rx___1)
+LOS3A$non_ca_rx___3 <-as.factor(LOS3A$non_ca_rx___3)
+
+LOS3A$pt_prev_ca <-as.factor(LOS3A$pt_prev_ca)
+LOS3A$malig_location___1 <-as.factor(LOS3A$malig_location___1)
+LOS3A$malig_location___2 <-as.factor(LOS3A$malig_location___2)
+LOS3A$malig_location___3 <-as.factor(LOS3A$malig_location___3)
+LOS3A$radiologic_stage  <-as.factor(LOS3A$red_met)
+LOS3A$processed_foods <-as.factor(LOS3A$processed_foods)
+LOS3A$asa_grading <-as.factor(LOS3A$asa_grading)
+LOS3A$ecog_status <-as.factor(LOS3A$ecog_status)
+LOS3A$rx_mdt1___1 <-as.factor(LOS3A$rx_mdt1___1)
+LOS3A$prior_c_scope <-as.factor(LOS3A$prior_c_scope)
+LOS3A$colonoscopy_at_visit  <-as.factor(LOS3A$colonoscopy_at_visit)
+LOS3A$radiologic_stage2 <-as.factor(LOS3A$radiologic_stage2)
+LOS3A$histo_lab <-as.factor(LOS3A$histo_lab)
+LOS3A$histo_ca_pre_rx  <-as.factor(LOS3A$histo_ca_pre_rx)
+LOS3A$grade_differentation <-as.factor(LOS3A$grade_differentation)
+LOS3A$subject_grading <-as.factor(LOS3A$subject_grading)
+LOS3A$rad_sensitizing_agentD <-as.factor(LOS3A$rad_sensitizing_agentD)
+LOS3A$radiation_complications <-as.factor(LOS3A$radiation_complications)
+LOS3A$pre_therap_surg_comps <-as.factor(LOS3A$pre_therap_surg_comps)
+LOS3A$preop_dietician <-as.factor(LOS3A$preop_dietician)
+LOS3A$surg_urgency <-as.factor(LOS3A$surg_urgency)
+LOS3A$chemo_treat_D <-as.factor(LOS3A$chemo_treat_D)
+LOS3A$chemo_complicationD <-as.factor(LOS3A$chemo_complicationD)
+LOS3A$Procedure_D  <-as.factor(LOS3A$Procedure_D)
+LOS3A$ca_complications___1 <-as.factor(LOS3A$ca_complications___1)
+LOS3A$surgical_access <-as.factor(LOS3A$surgical_access)
+LOS3A$anastomosis <-as.factor(LOS3A$anastomosis)
+LOS3A$anast_technique <-as.factor(LOS3A$anast_technique)
+LOS3A$anast_type <-as.factor(LOS3A$anast_type)
+LOS3A$stoma <-as.factor(LOS3A$stoma)
+LOS3A$stoma_type <-as.factor(LOS3A$stoma_type)
+LOS3A$maj_postop_comps <-as.factor(LOS3A$maj_postop_comps)
+LOS3A$maj_lap_complics <-as.factor(LOS3A$maj_lap_complics)
+LOS3A$Malig_location   <-as.factor(LOS3A$Malig_location)
+LOS3A$ses_land <-as.factor(LOS3A$ses_land)
+LOS3A$class <-as.factor(LOS3A$class)
+LOS3A$clavdin <-as.factor(LOS3A$clavdin)
+
+#=======added clavdin variable later for clasification of postcomplication classes
+table(LOS3A$clavdin,exclude = NULL)
+LOS3A$clavdin <- ifelse(LOS3A$clavdin == "1", "grade12",
+                               ifelse(LOS3A$clavdin =="2", "grade12",
+                                      ifelse(LOS3A$clavdin =="3", "grade3",
+                                             ifelse(LOS3A$clavdin =="4", "grade3", 
+                                                    ifelse(LOS3A$clavdin =="5", "grade3",
+                                                           ifelse(LOS3A$clavdin =="6", "grade4",
+                                                                  ifelse(LOS3A$clavdin =="7", "grade4",      
+                                                                         ifelse(LOS3A$clavdin =="8", "grade4",
+                                                                                ifelse(LOS3A$clavdin =="9", "grade4",
+                                                                                       ifelse(LOS3A$clavdin =="0", "Nocomp",      
+                                                                                              
+                                                    
+                                                    NA
+                                             ))))))))))
+
+
+
+
+#=========pattern of missingness and complete data
+is.na(LOS3A)
+ rowSums(is.na (LOS3A))
+ table(is.na(LOS3A))
+ dt1 =LOS3A[complete.cases(LOS3A),]	
+ MRCc <- LOS3A[ , colSums(is.na(LOS3A)) ==0]
+ MRCi <- LOS3A[ , colSums(is.na(LOS3A)) >0]
+
+ 
+write.csv(MRCc, file = "MRCc.csv")
+write.csv(MRCi, file = "MRCi.csv")
+colSums(is.na(MRCi))
+
+#=======================load packages
+library(VIM) # optional
+library(mice)
+library(BaylorEdPsych)
+library(mvnmle)
+#library(missForest)
+
+#===============Delete variables such as dates, that are not needed for imputation
+md.pattern(MRCi)
+MRCi <-MRCi[,-c(1:3,13,16,31:33,44:45)]
+MRCi <-MRCi[,-c(15:18,22:26)]
+MRCi <-MRCi[,-27]
+
+#===============25 variable have missing values. Can also use all the variables
+Mcar<-LittleMCAR(data.frame(MRCi[,1:26]))
+Mcar[c("chi.square", "df", "p.value")]
+#==============combine mrci and mrcc
+combine <- cbind(MRCc, MRCi)
+data_col <- combine[ , sample(1:ncol(combine))]
+#export to delete manually delete dates and nutritional variables and then bring  
+write.csv(combine, file = "combine.csv")
+combine <-read.csv("combine.csv")
+
+#============plot pattern of missing
+aggr(combine, col=c('navyblue','yellow'),
+     numbers=TRUE, sortVars=TRUE,
+     labels=names(combine), cex.axis=.7,
+     gap=3, ylab=c("Proportion of  missing data","Missing data pattern"))
+colSums(is.na(combine))
+comp <- combine[complete.cases(combine),]	
+
+#===================identify cases with highest missing
+na_rows = rowSums(is.na(combine))
+list(row)
+which.max(na_rows) 
+which(na_rows > 50)
+
+shadow<- as.data.frame(abs(is.na(MRCi)))
+miss.shadow<-shadow[,which(unlist(lapply(shadow,sum))!=0)]
+round(cor(miss.shadow),3)  
+#===================================Imputation
+library(missForest)
+set.seed(81)
+for_imp <- missForest(xmis = combine, maxiter = 10, ntree = 100,
+                      variablewise = FALSE,
+                      decreasing = FALSE, verbose = FALSE,
+                      mtry = floor(sqrt(ncol(combine))), replace = TRUE,
+                      classwt = NULL, cutoff = NULL, strata = NULL,
+                      sampsize = NULL, nodesize = NULL, maxnodes = NULL,
+                      xtrue = NA, parallelize = "no")
+
+for_imp$OOBerror
+imputed<-for_imp$ximp
+is.na(imputed)
+names(imputed)
+table()
+LOS3B <- imputed
+
+write.csv(imputed, file = "imputed.csv")
+
+
