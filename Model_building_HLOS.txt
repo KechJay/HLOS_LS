@@ -1,0 +1,439 @@
+#=========================================================
+rm(list=ls())
+getwd()
+setwd("C:/Users/ikeac/Desktop/LOS")
+LOS3B <- read.csv("imputed.csv")
+table(LOS3B$clavdin,exclude = NULL)
+
+LOS3B$hospital <-as.factor(LOS3B$hospital)
+LOS3B$gender <-as.factor(LOS3B$gender)
+LOS3B$race <-as.factor(LOS3B$race)
+LOS3B$language_group <- as.factor(LOS3B$language_group)
+LOS3B$employment <- as.factor(LOS3B$employment)
+LOS3B$education <- as.factor(LOS3B$education)
+LOS3B$place_of_birth <-as.factor(LOS3B$place_of_birth)
+LOS3B$sa_province <-as.factor(LOS3B$sa_province)
+LOS3B$relaionship_to_pt___5 <-as.factor(LOS3B$relaionship_to_pt___5)
+LOS3B$relaionship_to_pt___6 <-as.factor(LOS3B$relaionship_to_pt___6)
+LOS3B$fam_hist_ca <-as.factor(LOS3B$fam_hist_ca)
+LOS3B$relaionship_to_pt___16 <-as.factor(LOS3B$relaionship_to_pt___16) 
+LOS3B$referral <-as.factor(LOS3B$referral)
+LOS3B$smoking <-as.factor(LOS3B$smoking ) 
+LOS3B$alcohol_consump <-as.factor(LOS3B$alcohol_consump) 
+LOS3B$malig_location___3 <-as.factor(LOS3B$malig_location___3) 
+LOS3B$dm <-as.factor(LOS3B$dm) 
+LOS3B$non_ca_rx___5 <-as.factor(LOS3B$non_ca_rx___5) 
+LOS3B$non_ca_rx___1 <-as.factor(LOS3B$non_ca_rx___1)
+LOS3B$non_ca_rx___3 <-as.factor(LOS3B$non_ca_rx___3)
+LOS3B$pt_prev_ca <-as.factor(LOS3B$pt_prev_ca)
+LOS3B$malig_location___1 <-as.factor(LOS3B$malig_location___1)
+LOS3B$malig_location___2 <-as.factor(LOS3B$malig_location___2)
+LOS3B$malig_location___3 <-as.factor(LOS3B$malig_location___3)
+LOS3B$radiologic_stage  <-as.factor(LOS3B$red_met)
+LOS3B$processed_foods <-as.factor(LOS3B$processed_foods)
+LOS3B$asa_grading <-as.factor(LOS3B$asa_grading)
+LOS3B$ecog_status <-as.factor(LOS3B$ecog_status)
+LOS3B$rx_mdt1___1 <-as.factor(LOS3B$rx_mdt1___1)
+LOS3B$prior_c_scope <-as.factor(LOS3B$prior_c_scope)
+LOS3B$colonoscopy_at_visit  <-as.factor(LOS3B$colonoscopy_at_visit)
+LOS3B$radiologic_stage2 <-as.factor(LOS3B$radiologic_stage2)
+LOS3B$histo_lab <-as.factor(LOS3B$histo_lab)
+LOS3B$histo_ca_pre_rx  <-as.factor(LOS3B$histo_ca_pre_rx)
+LOS3B$grade_differentation <-as.factor(LOS3B$grade_differentation)
+LOS3B$subject_grading <-as.factor(LOS3B$subject_grading)
+LOS3B$rad_sensitizing_agentD <-as.factor(LOS3B$rad_sensitizing_agentD)
+LOS3B$radiation_complications <-as.factor(LOS3B$radiation_complications)
+LOS3B$pre_therap_surg_comps <-as.factor(LOS3B$pre_therap_surg_comps)
+LOS3B$preop_dietician <-as.factor(LOS3B$preop_dietician)
+LOS3B$surg_urgency <-as.factor(LOS3B$surg_urgency)
+LOS3B$chemo_treat_D <-as.factor(LOS3B$chemo_treat_D)
+LOS3B$chemo_complicationD <-as.factor(LOS3B$chemo_complicationD)
+LOS3B$Procedure_D  <-as.factor(LOS3B$Procedure_D)
+LOS3B$ca_complications___1 <-as.factor(LOS3B$ca_complications___1)
+LOS3B$surgical_access <-as.factor(LOS3B$surgical_access)
+LOS3B$anastomosis <-as.factor(LOS3B$anastomosis)
+LOS3B$anast_technique <-as.factor(LOS3B$anast_technique)
+LOS3B$anast_type <-as.factor(LOS3B$anast_type)
+LOS3B$stoma <-as.factor(LOS3B$stoma)
+LOS3B$stoma_type <-as.factor(LOS3B$stoma_type)
+LOS3B$maj_postop_comps <-as.factor(LOS3B$maj_postop_comps)
+LOS3B$maj_lap_complics <-as.factor(LOS3B$maj_lap_complics)
+LOS3B$Malig_location   <-as.factor(LOS3B$Malig_location)
+LOS3B$milk___1   <-as.factor(LOS3B$milk___1)
+LOS3B$class   <-as.factor(LOS3B$class)
+LOS3B$processed_foods   <-as.numeric(LOS3B$processed_foods)
+LOS3B$hpt   <-as.factor(LOS3B$hpt)
+table(LOS3B$pap_rice)
+
+LOS3B$class <- relevel(LOS3B$class, ref = "low")#set reference category 
+ LOS3B$stoma_type <-relevel(LOS3B$stoma_type, ref="3") 
+#LOS3B <- LOS3B[which(LOS3B$days <115), ]
+#LOS3B$pap_rice <- ifelse(LOS3B$pap_rice <7, "<7", "7") 
+table(LOS3B$surg_urgency)
+median <- aggregate(x=LOS3B$days,
+                     by=list(LOS3B$surg_urgency),
+                     FUN= median)
+#===================================Recateogorise tstage
+table(LOS3B$t_stage)
+LOS3B$t_stage <- ifelse(LOS3B$t_stage == "stage123", "T123",
+                          ifelse(LOS3B$t_stage =="stage4", "T4",
+                                            ifelse(LOS3B$t_stage =="stage5", "TX","T0")))
+                                             
+#LOS3B <-LOS3B[-353,]
+
+table(LOS3B$class) 
+LOS3B <-LOS3B[,-c(1,30:32,98,100,103:107)]
+#LOS3B <-LOS3B[,-c(1,3,32:34,104,106,108:111,113)
+
+#export data and save for continous outcome
+#write.csv(LOS3B, file ="LOS_Con")
+
+
+str(LOS3B)
+
+LOS3B <-LOS3C
+#====================================Delete patients with clavdin score>2 and refit the model
+#was done after the overall model as suggested by the reviewer 
+LOS3CA <-cbind(LOS3B,LOS3BA)#LOS3BA is postoperative data, the same variables with LOS3B
+LOS3CA <-LOS3C[,c(1:96,177)]#take only the clavin score (177) from post-operative data
+tableLOS3CA $clavdin)
+LOS3CA $clavdin <- ifelseLOS3CA $clavdin == "grade12", "grade<2",
+                         ifelseLOS3CA $clavdin =="grade3", "grade>2",
+                                ifelseLOS3CA $clavdin =="grade4", "grade>2","Nocomp")))
+
+
+table(LOS3C$clavdin)
+
+LOS3C <- LOS3C[which(LOS3C$clavdin!="grade>2"), ]
+#==============================================================================Continue with overall model
+#==============================================Model building
+#LOS3B <-LOS3B[,-c(2,102:109)]
+
+library(caret)
+library(doSNOW)
+library(MLmetrics)
+library(DMwR)
+library(klaR)
+library(tidyverse)
+library(glmnet)
+#==============================================================Train control
+my_trctrl1 <-trainControl(method = "repeatedcv",
+                         number = 10,
+                         repeats = 30,
+                         ## Estimate class probabilities
+                         classProbs = TRUE,
+                         savePredictions = T,
+                         #sampling ="smote",
+                         ## Evaluate performance using 
+                         ## the following function
+                         search = "grid",
+                         
+                         summaryFunction = twoClassSummary)
+
+
+my_trctrl3 <-trainControl(method = "LGOCV",
+                          number = 10,
+                          #repeats = 30,
+                         ## Estimate class probabilities
+                         classProbs = TRUE,
+                         savePredictions = T,
+                         ## Evaluate performance using 
+                         ## the following function
+                         search = "grid",
+                         summaryFunction = twoClassSummary)                         
+                         
+                         
+                         
+my_trctrl4 <-trainControl(method = "boot632",
+                          number = 10,
+                          classProbs = TRUE,
+                         savePredictions = T,
+                         ## Evaluate performance using 
+                         ## the following function
+                         search = "grid",
+                         summaryFunction = twoClassSummary
+                                  )
+#==================================================================Feature selction with Lasso
+cl <- makeCluster(6, type = "SOCK")  
+registerDoSNOW(cl)
+set.seed(1234)
+#.lambda=seq(0.01, 0.038,length = 10)start from 0.01 and stop at 0.038. estimate upto 10 points
+#seq(0.01, 0.038, by = 0.0001)start from 0.01 to 0.038 and go by 0.001
+Lasso <-train(class~.,
+              data = LOS3B,
+              method='glmnet',
+              family="binomial",
+              tuneGrid=expand.grid(
+                .alpha=1,
+                .lambda=seq(0.01, 0.038, length = 10)),
+              trControl =my_trctrl3, metric = "ROC")
+              
+
+              plot(varImp(Lasso)
+                )
+?glmnet 
+plot(Lasso)
+ plot(Lasso$results)
+Lasso$bestTune
+mean(Lasso$resample$ROC)
+summary(Lasso$finalModel$beta)
+fit(Lasso$finalModel)
+Lasso$bestTune
+vif(Lasso)
+varImp(Lasso)
+#=====================================================================selected variables
+LOS3C <- select(LOS3C,ecog_status,stoma,gender,hpt,                       
+          grade_differentation,asa_grading,
+          blds_hb2,maj_postop_comps,class) 
+
+
+#pap_rice,milk___1,
+
+table(LOS3C$grade_differentation)
+
+LOS3C$grade_differentation <-relevel(LOS3C$grade_differentation, ref ="3")
+#========================================================logistic regression
+library(DMwR)
+library(caTools)
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456)
+logistic1 = train(
+  class~.,data=LOS3C,
+  trControl = my_trctrl1,
+  method = "glm",
+  family = "binomial",
+  tuneLength = 10,
+  metric = "ROC")
+
+#shutdown cluster
+stopCluster(cl)
+mean = mean(logistic1$resample$ROC)
+varImp(logistic1)
+summary(logistic1)
+confusionMatrix(logistic1)
+mean = mean(logistic1$resample$ROC)
+sd(logistic1$resample$Spec)
+se =(sd(logistic1$resample$ROC)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+             
+
+
+library(DMwR)
+library(caTools)
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456)
+logistic3 = train(
+  class~.,data=LOS3C,
+  trControl = my_trctrl3,
+  method = "glm",
+  family = "binomial",
+  tuneLength = 10,
+  metric = "ROC")
+#shutdown cluster
+stopCluster(cl)
+
+confusionMatrix(logistic3)
+varImp(logistic3)
+mean = mean(logistic3$resample$ROC)
+sd(logistic3$resample$ROC)
+se =(sd(logistic3$resample$Sens)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+summary(logistic3)
+
+
+
+library(DMwR)
+library(caTools)
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456)
+logistic4 = train(
+  class~.,data=LOS3C,
+  trControl = my_trctrl4,
+  method = "glm",
+  family = "binomial",
+  tuneLength = 10,
+  metric = "ROC")
+
+#shutdown cluster
+stopCluster(cl)
+
+varImp(logistic4)
+confusionMatrix(logistic4)
+mean = mean(logistic4$resample$ROC)
+sd(logistic4$resample$ROC)
+se =(sd(logistic4$resample$ROC)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+#shutdown cluste
+
+#===========================================================================SVMRadial
+cl <- makeCluster(6, type = "SOCK")  
+registerDoSNOW(cl)
+SVMgrid2 <- expand.grid(sigma = c( 0.045,0.05, 0.08, 0.01, 0.1,1), C = c(1.6,1.65,1.89,1.95,2))
+set.seed(3456) 
+#final value
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456) 
+svmR1 <- train(as.factor(class)~., data=LOS3C,
+              method="svmRadial", 
+              trControl=my_trctrl1,
+             tuneGrid = expand.grid(sigma = 0.045,C = 1.6),
+              #tuneGrid = SVMgrid2,
+              #preProc = c("scale","YeoJohnson"), 
+              verbose=FALSE, metric ="ROC")
+
+
+stopCluster(cl)
+varImp(svmR1)
+confusionMatrix(svmR1)
+mean(svmR1$resample$Spec)
+sd(svmR1$resample$Spec)
+se =(sd(svmR1$resample$ROC)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+#shutdown cluste
+
+
+
+#svmR3
+
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456) 
+svmR3 <- train(as.factor(class)~., data=LOS3C,
+              method="svmRadial", 
+              trControl=my_trctrl3,
+              tuneGrid = expand.grid(sigma = 0.01,C = 2),
+              #tuneGrid = SVMgrid2,
+              #preProc = c("scale","YeoJohnson"), 
+              verbose=FALSE, metric ="ROC")
+
+
+stopCluster(cl)
+varImp(svmR3)
+confusionMatrix(svmR3)
+mean(svmR3$resample$Spec)
+sd(svmR3$resample$Spec)
+se =(sd(svmR3$resample$ROC)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+
+
+#svmR4
+
+cl <- makeCluster(6, type = "SOCK")
+registerDoSNOW(cl)
+set.seed(3456) 
+svmR4 <- train(as.factor(class)~., data=LOS3C,
+              method="svmRadial", 
+              trControl=my_trctrl4,
+              tuneGrid = expand.grid(sigma = 0.01,C = 2),
+              #preProc = c("scale","YeoJohnson"), 
+              verbose=FALSE, metric ="ROC")
+
+
+stopCluster(cl)
+    varImp(svmR4)
+confusionMatrix(svmR4)
+mean(svmR4$resample$ROC)
+sd(svmR4$resample$ROC)
+se =(sd(svmR4$resample$ROC)/sqrt(10))
+lci <-mean-(2*se)
+Uci <-mean+(2*se)
+
+
+
+#===============================SVM
+
+ind9 <- svmR1$pred$C==1.6
+plot.roc(svmR1$pred$obs[ind9],
+         svmR1$pred$low[ind9], print.auc = FALSE, col = "green4", 
+         asp = NA,
+         #print.auc.y = 0.6, print.auc.x = 0.7)
+         cex.lab =1.5, cex.axis=1.5,legacy.axes = TRUE, xlab = "1 - Specificity")
+
+
+ind11 <- svmR3$pred$C==2.0
+plot.roc(svmR3$pred$obs[ind11],
+         svmR3$pred$high[ind11], print.auc = FALSE, col = "red",asp = NA,
+         add = TRUE, print.auc.col = "red",legacy.axes = TRUE, xlab = "1 - Specificity")
+#print.auc.y = 0.4, print.auc.x = 0.5)
+
+ind12 <- svmR4$pred$C==2
+plot.roc(svmR4$pred$obs[ind12],
+         svmR4$pred$low[ind12], print.auc = FALSE, col = "blue",asp = NA,
+         add = TRUE, print.auc.col = "red",legacy.axes = TRUE, xlab = "1 - Specificity")
+
+
+
+#================Extract the values for model calibration
+library(MLeval)
+## get precision recall gain curve
+
+cal1 <- calibration(obs ~ high , data = logistic1$pred)
+cal3 <- calibration(obs ~ high , data = logistic3$pred)
+cal4 <- calibration(obs ~ high , data = logistic4$pred)
+cal4$data
+
+cal8 <- calibration(obs ~ high , data = svmR1$pred)
+cal9 <- calibration(obs ~ high , data = svmR3$pred)
+cal10 <- calibration(obs ~ high , data = svmR4$pred)
+
+cal6$data
+xyplot(cal1)
+plot(cal1, add = TRUE)
+#==========================================Values were arranged in excel. Import and plot in excel
+library(readxl)
+cal<- read_excel("C:/Users/ikeac/Desktop/LOS/LOS_paper.xlsx","sheet" = "SVM")
+str(cal)
+My_Theme = theme(
+  axis.title.x = element_text(size = 16),
+  axis.text.x = element_text(size = 14),
+  axis.text.y = element_text(size = 14),
+  axis.title.y = element_text(size = 16))
+
+cal$Model <-as.factor(cal$Model) 
+g = ggplot(data = cal,aes(x = midpoint, y = Percent, color = Model,group = Model)) +
+ geom_point(size=2)+geom_line( size=0.5, lwd = 1)+
+  scale_color_manual(values=c( "aquamarine2", "red", "blue"))+
+ geom_abline(intercept =0, slope = 1, lwd =0.8, lty =2) 
+
+g+My_Theme
+#================================================Feature importance
+Feat<- read_excel("C:/Users/ikeac/Desktop/LOS/LOS_paper.xlsx","sheet" = "Feat")
+Feat$Classifier <-as.factor(Feat$Classifier) 
+Feat$Features <-as.factor(Feat$Features)
+
+str(Feat)
+par(mfrow=c(2,2))
+
+Feat2 <- transform(Feat,
+                  Features = reorder(Features,order(Importance, decreasing = TRUE)))
+
+ggplot(Feat, aes(fill=Classifier, y=Importance, x=Features)) + 
+  geom_bar(position="dodge", stat="identity")
+
+ACC<- read_excel("C:/Users/ikeac/Desktop/LOS/LOS_paper.xlsx","sheet" = "ACC")
+str(ACC)
+ACC$Classifier <-as.factor(ACC$Classifier) 
+ACC$TY  <-as.factor(ACC$TY)
+
+ggplot(ACC, aes(fill=Classifier, y=ACC, x=TY)) + 
+  geom_bar(position="dodge", stat="identity")
+
+summary(des_los2$days)
+#===================================Compare models based on the validation methods
+wilcox.test(logistic4$resample$ROC,logistic1$resample$ROC,alt="two.sided",paired=TRUE,exact=FALSE, correct=FALSE)
+#z stat
+z <- qnorm(p-value/2)
+z <- qnorm(0.5076/2)
+#effect size
+#z/sqr(N)
+z/sqrt(20)
+?wilcox.test
