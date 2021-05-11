@@ -1,0 +1,411 @@
+
+rm(list=ls())
+LOS3 <- read.csv("C:~/LOS3.csv")#load dataset
+
+#==Estimate the outcome variables#put in date format
+LOS3$date_of_first_visit <-as.Date(LOS3$date_of_first_visit,format = "%Y/%m/%d")
+LOS3$therapeutic_surg <-as.Date(LOS3$therapeutic_surg,format = "%Y/%m/%d")
+LOS3$hosp_discharge_date <-as.Date(LOS3$hosp_discharge_date,format = "%Y/%m/%d")
+
+#compute length of hospital stay
+LOS3$days <-LOS3$hosp_discharge_date - LOS3$therapeutic_surg
+LOS3$days <-as.numeric(LOS3$days)
+summary(LOS3$days)
+
+#recategorise hospitle values to public and private
+table(LOS3$hospital)
+LOS3$hospital <-ifelse(LOS3$hospital =="1", "1",
+                       ifelse(LOS3$hospital=="2", "2",
+                              ifelse(LOS3$hospital=="3", "2",   
+                                     ifelse(LOS3$hospital=="4", "2", "2"))))
+table(LOS3$hospital, exclude = NULL)
+LOS3$hospital <-as.factor(LOS3$hospital)
+
+#========Assess the distribution of surgery per year and across hosp.
+days <-LOS3$days
+hospital <-LOS3$hospital
+record_id <-LOS3$record_id
+table(LOS3$hospital)
+summary(days)
+surg_year = substring(LOS3$therapeutic_surg,1,4)#extract only the year from the date of surg.
+des_los <-data.frame(surg_year,days,hospital,record_id)#put the values in dataframe
+
+#des_los2 <- des_los[which(des_los$days >120), ]#remove outliers if necessarily
+summary(des_los2$days)
+
+des_los6 <- des_los2[which(des_los2$surg_year=="2016"), ]#assess for each year
+des_los7 <- des_los2[which(des_los2$surg_year=="2017"), ]
+des_los8 <- des_los2[which(des_los2$surg_year=="2018"), ]
+des_los9 <- des_los2[which(des_los2$surg_year=="2019"), ]
+des_los2 <- des_los2[which(des_los2$surg_year=="2020"), ]
+table(des_los2$hospital,des_los2$days)
+summary(des_los3$days)
+
+==========================================ggplot of 
+My_Theme = theme(
+  axis.title.x = element_text(size = 16),
+  axis.text.x = element_text(size = 14),
+  axis.text.y = element_text(size = 14),
+  axis.title.y = element_text(size = 16))
+
+
+#========================barplot across hopsitals
+str(des_los)
+summary(des_los$days)
+g = ggplot(data = des_los2,aes(x = surg_year, y = days, fill = hospital)) +
+  geom_bar(position="dodge", stat="identity")
+  #scale_color_manual(values=c("red", "blue"))
+
+g+My_Theme
+
+
+#=========================aggregate boxplot
+median <- aggregate(x=des_los2$days,
+                    by=list(des_los2$surg_year,des_los2$hospital),
+                    FUN=median)
+
+g = ggplot(data = median,aes(x = Group.1, y = x, fill = Group.2)) +
+  geom_bar(position="dodge", stat="identity")
+ # geom_point()
+
+g+My_Theme
+#==========================create categorical plots
+dev.off()#clear plots
+summary(LOS3$days)
+hist(LOS3$days)
+LOS3$class <- ifelse(LOS3$days <=9,"low", "high")
+LOS3$class <-as.factor(LOS3$class)
+table(LOS3$class)
+#==========================Feature engineering
+#===========================Demographics
+table(LOS3$hospital)
+LOS3$hospital <-ifelse(LOS3$hospital =="1", "1",
+                       ifelse(LOS3$hospital=="2", "2",
+                              ifelse(LOS3$hospital=="3", "2",   
+                                     ifelse(LOS3$hospital=="4", "2", "2"))))
+table(LOS3$hospital, exclude = NULL)
+
+table(LOS3$race)
+LOS3$race <-ifelse(LOS3$race =="1", "Black",
+                   ifelse(LOS3$race =="2", "White","others"))
+
+table(LOS3$race, exclude = NULL)
+
+#gender
+table(LOS3$gender)
+
+#language
+LOS3$language_group <-ifelse(LOS3$language_group=="10", "English", "Non-English")
+table(LOS3$language_group, exclude = NULL)                      
+                               
+#place of birth
+table(LOS3$place_of_birth)
+
+#SA Province
+table(LOS3$sa_province)
+LOS3$sa_province <-ifelse(LOS3$sa_province=="3", "Gauteng", "others")
+
+
+#table(LOS3$citizenship)dropped
+#travel distance
+
+summary(LOS3$travel_distance_linear)
+
+
+#ralationship
+table(LOS3$relationship_staus, exclude = NULL)
+LOS3$relationship_staus <-ifelse(LOS3$relationship_staus =="1", "married",
+                               ifelse(LOS3$relationship_staus=="2", "married","Notmarried"))
+                                    
+                                             
+table(LOS3$ses_electricity , exclude = NULL)#dropped
+table(LOS3$ses_refrigerator)#dropped
+table(LOS3$ses_cellphone)#dropped
+
+
+#land
+table(LOS3$ses_land, exclude = NULL)
+
+#ses_car
+table(LOS3$ses_car)  
+
+#employment
+table(LOS3$employment)  
+table(LOS3$education) 
+
+#education level
+table(LOS3$education, exclude = NULL)
+LOS3$education <-ifelse(LOS3$education=="1", "Nomatric",
+                        ifelse(LOS3$education=="2", "Nomatric",
+                               ifelse(LOS3$education=="3", "Nomatric",
+                                      ifelse(LOS3$education=="4", "matric",
+                               ifelse(LOS3$education=="5","tertiary education",NA)))))  
+
+                                             
+#family hist
+table(LOS3$fam_hist_ca, exclude = NULL)
+LOS3$fam_hist_ca <-ifelse(LOS3$fam_hist_ca=="0", "no",
+                        ifelse(LOS3$fam_hist_ca=="1", "yes",NA))
+
+
+#relaionship_to_pt
+table(LOS3$relaionship_to_pt___5, exclude = NULL)                                    
+table(LOS3$relaionship_to_pt___6, exclude = NULL)      
+table(LOS3$relaionship_to_pt___16, exclude = NULL)                                    
+#============================Surgical variables
+
+table(LOS3$referral)
+str(LOS3)
+
+#smoking
+table(LOS3$smoking) 
+
+#alcohol
+table(LOS3$alcohol_consump)
+table(LOS3$alcohol_consump, exclude = NULL)
+LOS3$alcohol_consump <-ifelse(LOS3$alcohol_consump=="1", "never",
+                        ifelse(LOS3$alcohol_consump=="2", "current",
+                               ifelse(LOS3$alcohol_consump=="4","previous",NA))) 
+#diebetics
+table(LOS3$dm)
+
+#gastro intestinal
+summary(LOS3$git_pre_length_of_time)
+
+#non cancerous therapies
+table(LOS3$non_ca_rx___5)
+
+#=====================Examination and current CRC information
+
+summary(LOS3$weight)
+summary(LOS3$height)
+summary(LOS3$bmi)
+
+
+table(LOS3$malig_location___1, exclude = NULL)
+table(LOS3$malig_location___2, exclude = NULL)
+table(LOS3$malig_location___3, exclude = NULL)
+
+LOS3$Malig_location <-ifelse(LOS3$malig_location___1=="1", "colon,right",
+                              ifelse(LOS3$malig_location___2=="1", "colon,left",
+                                     ifelse(LOS3$malig_location___3=="1","rectum","rectum"))) 
+
+table(LOS3$Malig_location, exclude =NULL)
+
+#============================Dietary history (dietary_history)#Most were dropped
+summary(LOS3$meals_dly)
+summary(LOS3$red_met)
+summary(LOS3$processed_foods)
+summary(LOS3$beans_lentils)
+summary(LOS3$cook_methods)
+summary(LOS3$bread_days)
+summary(LOS3$fruit)
+summary(LOS3$pap_rice) 
+summary(LOS3$junk_foods) 
+
+
+ 
+table(LOS3$fats___3) 
+table(LOS3$fats___5) 
+
+table(LOS3$fats___7)             
+table(LOS3$fats___8)        
+table(LOS3$fats___9)              
+table(LOS3$fats___10) 
+
+table(LOS3$milk___1) 
+table(LOS3$milk___0)
+table(LOS3$caffeinated_drinks)
+              
+#========================Anaesthetic grading assessment, ECOG status, Global physical Activity                
+     
+table(LOS3$asa_grading,exclude = NULL)
+LOS3$asa_grading <- ifelse(LOS3$asa_grading == "0", "testnotd",
+                          ifelse(LOS3$asa_grading =="1", "gradeI",
+                                 ifelse(LOS3$asa_grading =="2", "gradeII&III",
+                                        ifelse(LOS3$asa_grading =="3", "gradeII&III",NA))))
+
+table(LOS3$ecog_status)   
+#eco_staus
+table(LOS3$ecog_status, exclude = NULL)
+LOS3$ecog_status <- ifelse(LOS3$ecog_status == "6", "not done",
+                          ifelse(LOS3$ecog_status =="0", "eco0",
+                                 ifelse(LOS3$ecog_status =="1", "eco1",
+                                        ifelse(LOS3$ecog_status=="2" , "eco234",
+                                               ifelse(LOS3$ecog_status =="3", "eco234",
+                                                      ifelse(LOS3$ecog_status =="4", "eco234",NA))))))
+
+table(LOS3$bloods_lab2, exclude = NULL)
+
+LOS3$bloods_lab2 <- ifelse(LOS3$bloods_lab2 == "1", "lab135",
+                           ifelse(LOS3$bloods_lab2 =="3", "lab135",
+                                  ifelse(LOS3$bloods_lab2 =="5", "lab135",
+                                         ifelse(LOS3$bloods_lab2=="2" , "lab2",
+                                                ifelse(LOS3$bloods_lab2=="4" , "lab4",NA
+                                                )))))   
+
+
+table(LOS3$bloods_lab2)
+
+summary(LOS3$blds_hb2)
+table(LOS3$hiv_enrollment) 
+
+#colonoscopy
+
+table(LOS3$prior_c_scope)
+LOS3$prior_c_scope <- ifelse(LOS3$prior_c_scope == "1", "yes",
+                           ifelse(LOS3$prior_c_scope =="2", "no",NA))
+                                 
+table(LOS3$prior_c_scope, exclude = NULL)                                         
+
+table(LOS3$colonoscopy_at_visit1, exclude = NULL) 
+LOS3$colonoscopy_at_visit1 <- ifelse(LOS3$colonoscopy_at_visit1 == "1", "yes",
+                             ifelse(LOS3$colonoscopy_at_visit1 =="2", "no",NA))
+
+
+
+table(LOS3$radiologic_stage) 
+table(LOS3$radiologic_stage, exclude = NULL)
+LOS3$radiologic_stage <- ifelse(LOS3$radiologic_stage == "0", "0",
+                               ifelse(LOS3$radiologic_stage =="1", "rad1",
+                                      ifelse(LOS3$radiologic_stage =="2", "rad2",
+                                             ifelse(LOS3$radiologic_stage=="3" , "rad2",
+                                                    ifelse(LOS3$radiologic_stage =="4", "rad2",
+                                                           ifelse(LOS3$radiologic_stage =="5", "rad3",
+                                                                  ifelse(LOS3$radiologic_stage =="6", "rad3",
+                                                                         ifelse(LOS3$radiologic_stage =="7", "rad3",
+                                                                                ifelse(LOS3$radiologic_stage =="8", "rad4",
+                                                                        ifelse(LOS3$radiologic_stage =="9","rad4",NA))))))))))
+
+
+
+                                              
+  
+table(LOS3$rx_mdt1___1)              
+table(LOS3$rx_mdt1___2)             
+table(LOS3$rx_mdt1___3)             
+table(LOS3$rx_mdt1___4)              
+table(LOS3$rx_mdt1___5)              
+
+#======================================Histology (tumour_detail_histology)
+tail(LOS3)
+table(LOS3$histo_lab,exclude = NULL) 
+summary(LOS3$lesion_size_long,exclude = NULL) 
+summary(LOS3$lesion_size_long_short,exclude = NULL) 
+summary(LOS3$ca_circum_margins,exclude = NULL) 
+summary(LOS3$tmr_dist_to_cutbwl_marg,exclude = NULL) 
+table(LOS3$grade_differentation,exclude = NULL) 
+table(LOS3$subject_grading,exclude = NULL) 
+ 
+summary(LOS3$total_lymphs_found,exclude = NULL) 
+summary(LOS3$lymph_nodes,exclude = NULL) 
+
+table(LOS3$vasc_invasion,exclude = NULL) 
+LOS3$vasc_invasion <- ifelse(LOS3$vasc_invasion == "1", "yes",
+                                     ifelse(LOS3$vasc_invasion =="2", "no",NA))
+
+table(LOS3$lymphatic_invasion,exclude = NULL) 
+LOS3$lymphatic_invasion <- ifelse(LOS3$lymphatic_invasion == "1", "yes",
+                             ifelse(LOS3$lymphatic_invasion =="2", "no",NA))
+
+
+table(LOS3$serosal_involvement,exclude = NULL)
+
+LOS3$serosal_involvement <- ifelse(LOS3$serosal_involvement == "1", "yes",
+                                  ifelse(LOS3$serosal_involvement =="2", "no",NA))
+
+table(LOS3$t_stage,exclude = NULL)
+LOS3$t_stage <- ifelse(LOS3$t_stage == "1", "stage123",
+                                   ifelse(LOS3$t_stage =="2", "stage123",
+                                    ifelse(LOS3$t_stage =="3", "stage123",
+                                    ifelse(LOS3$t_stage =="4", "stage4",
+                                           ifelse(LOS3$t_stage =="5", "stage5",
+                                                  ifelse(LOS3$t_stage =="6", "stage6", 
+                                           NA))))))
+
+
+
+table(LOS3$n_stage,exclude = NULL)
+LOS3$n_stage <- ifelse(LOS3$n_stage == "1", "stage12",
+                       ifelse(LOS3$n_stage =="2", "stage12",
+                              ifelse(LOS3$n_stage =="3", "stage3",
+                              ifelse(LOS3$n_stage =="4", "stage4", NA))))
+                                     
+                                                    
+table(LOS3$m_stage3,exclude = NULL)
+
+table(LOS3$site_stage_classification,exclude = NULL)
+LOS3$site_stage_classification <- ifelse(LOS3$site_stage_classification == "1", "stage1",
+                       ifelse(LOS3$site_stage_classification =="2", "stage2",
+                              ifelse(LOS3$site_stage_classification =="3", "stage364",
+                                     ifelse(LOS3$site_stage_classification =="4", "stage364", 
+                                            ifelse(LOS3$site_stage_classification =="6", "stage364",
+                                                   ifelse(LOS3$site_stage_classification =="5", "stage364",
+                                            NA))))))
+
+table(LOS3$rad_sensitizing_agentD,exclude = NULL)
+table(LOS3$radiation_complications,exclude = NULL)
+
+#=====chemotherapy
+
+
+
+table(LOS3$preop_dietician,exclude = NULL)
+
+table(LOS3$surg_urgency,exclude = NULL)
+LOS3$surg_urgency <- ifelse(LOS3$surg_urgency == "1", "elective",
+                       ifelse(LOS3$surg_urgency =="2", "nonelective",
+                              ifelse(LOS3$surg_urgency =="3", "nonelective",    
+                              
+                              NA
+                       )))
+                                     
+
+table(LOS3$rx_intent,exclude = NULL)
+
+table(LOS3$surgeon,exclude = NULL)
+
+LOS3$surgeon <- ifelse(LOS3$surgeon == "1", "consultant",
+                        ifelse(LOS3$surgeon =="2", "nonconsultant", 
+                               ifelse(LOS3$surgeon =="3", "nonconsultant",
+                                      ifelse(LOS3$surgeon =="6", "nonconsultant", 
+                               NA))))
+                          
+                                                       
+
+table(LOS3$preop_dietician,exclude = NULL)
+table(LOS3$Procedure_D,exclude = NULL)
+
+table(LOS3$ca_complications___1,exclude = NULL)
+table(LOS3$surgical_access,exclude = NULL)
+
+LOS3$surgical_access <- ifelse(LOS3$surgical_access == "1", "open operation",
+                       ifelse(LOS3$surgical_access =="2", "middle",
+                              ifelse(LOS3$surgical_access =="3", "middle",
+                                     ifelse(LOS3$surgical_access =="4", "non-open operation",      
+                                     
+                                     NA
+                              ))))
+                              
+
+
+table(LOS3$anastomosis,exclude = NULL)
+table(LOS3$anast_technique,exclude = NULL)
+table(LOS3$anast_type,exclude = NULL)
+table(LOS3$stoma,exclude = NULL)
+
+table(LOS3$maj_postop_comps,exclude = NULL)
+table(LOS3$maj_lap_complics,exclude = NULL)
+table(LOS3$anast_type,exclude = NULL)
+table(LOS3$stoma,exclude = NULL)
+table(LOS3$education)
+
+#===survival
+table(LOS3$death)
+LOS3$death2 <-ifelse(is.na(LOS3$death), "survived", "not_survived") #here
+table(LOS3$death2, exclude = NULL)
+LOS3$death2<- as.factor(LOS3$death2)
+
+write.csv(LOS3, file = "LOS3A.csv")
+str(LOS3)
+
